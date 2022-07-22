@@ -50,7 +50,13 @@ $(document).ready(()=>{
     function email_validation(){
         let check = new RegExp(/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
         let email_val = $('#email').val();
-        if(!check.test(email_val)){
+        if(email_val === ""){
+            $('#emailvalidation').show();
+            $('#emailvalidation').html('Email is empty !!!');
+            $('#emailvalidation').css('color','red');
+            email = false;
+            return false;
+        }else if(!check.test(email_val)){
             $('#emailvalidation').show();
             $('#emailvalidation').html('Please Enter a valid email !!!');
             $('#emailvalidation').css('color','red');
@@ -64,17 +70,39 @@ $(document).ready(()=>{
 
     function password_validation(){
         let check = RegExp(/^(?=^.{8,}$)(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z])(?=.*[^A-Za-z0-9]).*$/);
+        let one = RegExp(/^(?=^.{8,}$).*$/);
+        let two = RegExp(/^(?=.*[0-9]).*$/);
+        let three = RegExp(/^(?=.*[A-Z]).*$/);
+        let four = RegExp(/^(?=.*[a-z]).*$/);
+        let five = RegExp(/^(?=.*[^A-Za-z0-9]).*$/);
         var password_val = $('#password').val();
-        console.log(check.test(password_val));
-        if(!check.test(password_val)){
+        // console.log(check.test(password_val));
+        if(password_val === ""){
             $('#passwordvalidation').show();
-            $('#passwordvalidation').html(`Password is Invalid!!<br>
-             should contain at least one digit<br>
-             should contain at least one lower case<br>
-             should contain at least one upper case<br>
-             should contain at least one special case<br>
-             should contain at least 8 from the mentioned characters`);
-
+            $('#passwordvalidation').html(`Password is empty!!`);
+            $('#passwordvalidation').css('color','red');
+            password_error = false;
+            return false;
+        }else if(!check.test(password_val)){
+            $('#passwordvalidation').show();
+            let ans = ``;
+            if(!one.test(password_val)){
+                ans = ans + `should contain at least 8 from the mentioned characters<br>`;
+            }
+            if(!two.test(password_val)){
+                ans = ans + `should contain at least one digit<br>`;
+            }
+            if(!three.test(password_val)){
+                ans = ans + `should contain at least one upper case<br>`;
+            }
+            
+            if(!four.test(password_val)){
+                ans = ans + `should contain at least one lower case<br>`;
+            }
+            if(!five.test(password_val)){
+                ans = ans + `should contain at least one special case<br>`;
+            }
+            $('#passwordvalidation').html(ans);
             $('#passwordvalidation').css('color','red');
             password_error = false;
             return false;
@@ -83,13 +111,6 @@ $(document).ready(()=>{
             password_error=true;
             $('#passwordvalidation').hide();
         }
-        // let num = false;
-        // let smallLetter=false;
-        // let bigLetter=false;
-        // let special = false;
-        // for (i in password_val){
-
-        // }
     }
 
     function confirm_password_validation(){
@@ -112,10 +133,11 @@ $(document).ready(()=>{
 
     $('#submitvalidation').click(()=>{
         username_validation();
+        email_validation();
         password_validation();
         confirm_password_validation();
 
-        if(error && password_error && confirm_password_error){
+        if(error && email && password_error && confirm_password_error){
             return true;
         }
         else return false;
